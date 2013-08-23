@@ -36,6 +36,7 @@
 
 
 # urls = [
+#	"http://www.gsp.ro/rss.xml" ,
 # 	"http://www.hotnews.ro/rss" ,
 # 	"http://www.hotnews.ro/rss/sport" ,
 # 	"http://www.hotnews.ro/rss/life" ,

@@ -16,18 +16,19 @@ Neography.configure do |config|
   config.parser         = MultiJsonParser
 end
 
-@neo = Neography::Rest.new()
+conn = Neography::Rest.new()
 
-def get_feed ( url )
 
-	feed = Neography::Node.find( "default" , "url" , url )
+def get_feed ( id , conn )
+
+	feed = Neography::Node.find( "feed" , "id" , id )
 
 	if ( feed.nil? )
 		puts "Feed does not exist"
 
-		feed = Neography::Node.create( "url" => url )
-		@neo.add_node_to_index( "default" , "url" , url , feed )
-		@neo.add_label( feed , "feed" )
+		feed = Neography::Node.create( "feed_id" => id )
+		conn.add_node_to_index( "feed" , "id" , id , feed )
+		conn.add_label( feed , "feed" )
 
 		puts "Created feed with id " + feed.neo_id
 
@@ -39,15 +40,15 @@ def get_feed ( url )
 
 end
 
-def get_user ( id )
-	user = Neography::Node.find( "users" , "id" , id )
+def get_user ( id , conn )
+	user = Neography::Node.find( "user" , "id" , id )
 
 	if ( user.nil? )
 		puts "User does not exist"
 
-		user = Neography::Node.create( "id" => id )
-		@neo.add_node_to_index( "users" , "id" , id , user )
-		@neo.add_label( user , "user")
+		user = Neography::Node.create( "user_id" => id )
+		conn.add_node_to_index( "user" , "id" , id , user )
+		conn.add_label( user , "user")
 
 		puts "Created user with id " + user.neo_id
 
@@ -58,8 +59,8 @@ def get_user ( id )
 	end
 end
 
-def create_relationship ( feed , user )
-	if ( @neo.get_node_relationships_to( feed, user ).nil? )
+def create_relationship ( feed , user , conn )
+	if ( conn.get_node_relationships_to( feed, user ).nil? )
 		feed.outgoing(:subscribed) << user
 		puts "Created relationship"
 	else
@@ -67,7 +68,19 @@ def create_relationship ( feed , user )
 	end
 end
 
-user = get_user(23)
-feed = get_feed("http://www.theverge.com/rss/index.xml")
+def delete_relationship ( feed , user , conn )
+	rel = conn.get_node_relationships_to( feed, user )
+	if ( ! rel.nil? )
+		conn.delete_relationship( rel )
+		puts "Deleted relationship"
+	else
+		puts "Relationship does not exist"
+	end
+end
 
-create_relationship( feed , user )
+
+feed = get_feed(114 , conn )
+
+feed.rels.outgoing.map do |node|
+	puts node.end_node.user_id
+end

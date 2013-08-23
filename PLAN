@@ -6,3 +6,8 @@ creem on nod nou, etichetat cu default + gasim userul cu idul potrivit si creem 
 * Inserare user nou
 
 daca nu exista inseram un user nou
+
+
+*creez feed nou - implementat
+*sterg feed
+*sterg grup -- sterg multe feeduri
