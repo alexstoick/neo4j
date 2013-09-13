@@ -41,6 +41,8 @@ def get_feed ( id , conn )
 end
 
 def get_user ( id , conn )
+
+	puts "uat"
 	user = Neography::Node.find( "user" , "id" , id )
 
 	if ( user.nil? )
@@ -78,9 +80,25 @@ def delete_relationship ( feed , user , conn )
 	end
 end
 
+user_id = 21
+feeds = [ 112 ]
 
-feed = get_feed(114 , conn )
 
-feed.rels.outgoing.map do |node|
-	puts node.end_node.user_id
+# user_id = 20
+# feeds = [ 112, 114, 120, 113, 118, 121, 123, 124, 343, 119, 122, 172 ]
+
+
+# user_id = 17
+# feeds = [ 112, 114, 113, 117, 256, 124, 144, 140, 259 ]
+
+# user_id = 18
+# feeds = [ 112 ]
+
+user = get_user( user_id , conn )
+
+feeds.each do | feed_id |
+
+	feed = get_feed( feed_id , conn )
+	create_relationship( feed , user , conn )
+
 end
